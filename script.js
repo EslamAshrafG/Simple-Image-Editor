@@ -124,52 +124,75 @@ function handleScaleChange() {
 }
 
 function handleSaveImg() {
-function convertDegreesToScale(degrees) {
+  function convertDegreesToScale(degrees) {
     return degrees === 180 ? -1 : 1;
-}
+  }
 
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
-// Handle high-DPI screens (retina displays)
-const pixelRatio = window.devicePixelRatio || 1;
-canvas.width = editedImg.naturalWidth * pixelRatio;
-canvas.height = editedImg.naturalHeight * pixelRatio;
-ctx.scale(pixelRatio, pixelRatio);
+  // Handle high-DPI screens (retina displays)
+  const pixelRatio = window.devicePixelRatio || 1;
+  canvas.width = editedImg.naturalWidth * pixelRatio;
+  canvas.height = editedImg.naturalHeight * pixelRatio;
+  ctx.scale(pixelRatio, pixelRatio);
 
-// Apply filters
-ctx.filter = `brightness(${stateFilters.brightness * 100}%) saturate(${stateFilters.saturate * 100}%) invert(${stateFilters.invert * 100}%) grayscale(${stateFilters.grayscale})`;
+  // Apply filters
+  ctx.filter = `brightness(${stateFilters.brightness * 100}%) saturate(${
+    stateFilters.saturate * 100
+  }%) invert(${stateFilters.invert * 100}%) grayscale(${
+    stateFilters.grayscale
+  })`;
 
-// Translate to the center of the canvas
-ctx.translate(canvas.width / (2 * pixelRatio), canvas.height / (2 * pixelRatio));
+  // Translate to the center of the canvas
+  ctx.translate(
+    canvas.width / (2 * pixelRatio),
+    canvas.height / (2 * pixelRatio)
+  );
 
-// Apply rotation if needed
-if (rotationValue !== 0) {
+  // Apply rotation if needed
+  if (rotationValue !== 0) {
     ctx.rotate((rotationValue * Math.PI) / 180);
-}
+  }
 
-// Apply scaling for mirroring (mirrorValueH, mirrorValueV should be 1 or -1)
-ctx.scale(
+  // Apply scaling for mirroring (mirrorValueH, mirrorValueV should be 1 or -1)
+  ctx.scale(
     convertDegreesToScale(mirrorValueH),
     convertDegreesToScale(mirrorValueV)
-);
+  );
 
-// Draw the image with the transformations
-ctx.drawImage(
+  // Draw the image with the transformations
+  ctx.drawImage(
     editedImg,
     -canvas.width / (2 * pixelRatio),
     -canvas.height / (2 * pixelRatio),
     canvas.width / pixelRatio,
     canvas.height / pixelRatio
-);
+  );
 
-// Delay download to ensure everything is rendered
-setTimeout(() => {
+  // Extract the original file extension from the image source
+  const originalSrc = editedImg.src;
+  const fileExtension = originalSrc.substring(originalSrc.lastIndexOf(".") + 1);
+
+  // Determine the MIME type based on the file extension
+  let mimeType = "";
+  if (fileExtension === "png") {
+    mimeType = "image/png";
+  } else if (fileExtension === "jpg" || fileExtension === "jpeg") {
+    mimeType = "image/jpeg";
+  } else if (fileExtension === "webp") {
+    mimeType = "image/webp";
+  } else {
+    mimeType = "image/png"; // Default to PNG if extension is unknown
+  }
+
+  // Delay download to ensure everything is rendered
+  setTimeout(() => {
     const link = document.createElement("a");
-    link.download = "newImage.jpg";
-    link.href = canvas.toDataURL("image/jpg");
+    link.download = `newImage.${mimeType}`;
+    link.href = canvas.toDataURL(mimeType);
     link.click();
-}, 900); // Adjust the delay if necessary
+  }, 900); // Adjust the delay if necessary
 }
 
 
