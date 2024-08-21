@@ -134,7 +134,11 @@ function handleSaveImg() {
   canvas.height = editedImg.naturalHeight;
 
   // Apply filters
-  ctx.filter = `saturate(${stateFilters.saturate}) brightness(${stateFilters.brightness}) invert(${stateFilters.invert}) grayscale(${stateFilters.grayscale})`;
+  ctx.filter = `brightness(${stateFilters.brightness * 100}%) saturate(${
+    stateFilters.saturate * 100
+  }%) invert(${stateFilters.invert * 100}%) grayscale(${
+    stateFilters.grayscale
+  })`;
 
   // Translate to the center of the canvas
   ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -165,6 +169,7 @@ function handleSaveImg() {
   link.href = canvas.toDataURL("image/jpeg");
   link.click();
 }
+
 
 // Event Listeners
 rotateAndFlipDiv.addEventListener("click", handleFlipAndRotate);
