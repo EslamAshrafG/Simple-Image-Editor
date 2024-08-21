@@ -167,9 +167,9 @@ ctx.drawImage(
 setTimeout(() => {
     const link = document.createElement("a");
     link.download = "newImage.jpg";
-    link.href = canvas.toDataURL("image/jpeg");
+    link.href = canvas.toDataURL("image/jpg");
     link.click();
-}, 100); // Adjust the delay if necessary
+}, 900); // Adjust the delay if necessary
 }
 
 
