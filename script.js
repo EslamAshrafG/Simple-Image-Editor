@@ -124,50 +124,52 @@ function handleScaleChange() {
 }
 
 function handleSaveImg() {
-  function convertDegreesToScale(degrees) {
+function convertDegreesToScale(degrees) {
     return degrees === 180 ? -1 : 1;
-  }
+}
 
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = editedImg.naturalWidth;
-  canvas.height = editedImg.naturalHeight;
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
 
-  // Apply filters
-  ctx.filter = `brightness(${stateFilters.brightness * 100}%) saturate(${
-    stateFilters.saturate * 100
-  }%) invert(${stateFilters.invert * 100}%) grayscale(${
-    stateFilters.grayscale
-  })`;
+// Handle high-DPI screens (retina displays)
+const pixelRatio = window.devicePixelRatio || 1;
+canvas.width = editedImg.naturalWidth * pixelRatio;
+canvas.height = editedImg.naturalHeight * pixelRatio;
+ctx.scale(pixelRatio, pixelRatio);
 
-  // Translate to the center of the canvas
-  ctx.translate(canvas.width / 2, canvas.height / 2);
+// Apply filters
+ctx.filter = `brightness(${stateFilters.brightness * 100}%) saturate(${stateFilters.saturate * 100}%) invert(${stateFilters.invert * 100}%) grayscale(${stateFilters.grayscale})`;
 
-  // Apply rotation if needed
-  if (rotationValue !== 0) {
+// Translate to the center of the canvas
+ctx.translate(canvas.width / (2 * pixelRatio), canvas.height / (2 * pixelRatio));
+
+// Apply rotation if needed
+if (rotationValue !== 0) {
     ctx.rotate((rotationValue * Math.PI) / 180);
-  }
+}
 
-  // Apply scaling for mirroring (mirrorValueH, mirrorValueV should be 1 or -1)
-  ctx.scale(
+// Apply scaling for mirroring (mirrorValueH, mirrorValueV should be 1 or -1)
+ctx.scale(
     convertDegreesToScale(mirrorValueH),
     convertDegreesToScale(mirrorValueV)
-  );
+);
 
-  // Draw the image with the transformations
-  ctx.drawImage(
+// Draw the image with the transformations
+ctx.drawImage(
     editedImg,
-    -canvas.width / 2,
-    -canvas.height / 2,
-    canvas.width,
-    canvas.height
-  );
+    -canvas.width / (2 * pixelRatio),
+    -canvas.height / (2 * pixelRatio),
+    canvas.width / pixelRatio,
+    canvas.height / pixelRatio
+);
 
-  // Create a link element to download the image
-  const link = document.createElement("a");
-  link.download = "newImage.jpg";
-  link.href = canvas.toDataURL("image/jpeg");
-  link.click();
+// Delay download to ensure everything is rendered
+setTimeout(() => {
+    const link = document.createElement("a");
+    link.download = "newImage.jpg";
+    link.href = canvas.toDataURL("image/jpeg");
+    link.click();
+}, 100); // Adjust the delay if necessary
 }
 
 
