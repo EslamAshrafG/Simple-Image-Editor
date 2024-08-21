@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="all.min.css" />
+    <link rel="stylesheet" href="font-awesome.min.css" />
+    <link rel="stylesheet" href="normalize.css" />
+    <script src="script.js" defer></script>
+    <title>Image Editor</title>
+  </head>
+  <body>
+    <main class="editor">
+      <div class="title">
+        <h1>Easy Image Editor</h1>
+      </div>
+      <div class="main-edit">
+        <div class="editing-div disable">
+          <div class="edit-buttons">
+            <h3>Filters</h3>
+            <div class="filter-btns">
+              <button class="btn filter Saturation active-filter">
+                Saturate
+              </button>
+              <button class="btn filter Brightness">Brightness</button>
+              <button class="btn filter Inversion">Invert</button>
+              <button class="btn filter Grayscale">Grayscale</button>
+            </div>
+          </div>
+          <div class="scale">
+            <div class="range-edit">
+              <span class="filter-name">Saturate</span>
+              <span class="filter-value">100%</span>
+            </div>
+            <input type="range" min="0" max="200" value="100" id="range-edit" />
+          </div>
+          <div class="rotate-flip">
+            <h3>Rotate & Flip</h3>
+            <i
+              data-func="rotate_r"
+              class="fa-solid fa-rotate-right rotate-r"
+            ></i>
+            <i
+              data-func="rotate_l"
+              class="fa-solid fa-rotate-left rotate-l"
+            ></i>
+            <i
+              data-func="mirror_h"
+              class="fa-solid fa-arrow-right-arrow-left mirror-h"
+            ></i>
+            <i
+              data-func="mirror_v"
+              class="fa-solid fa-arrows-up-down mirror-v"
+            ></i>
+          </div>
+        </div>
+        <div class="image">
+          <img src="imgs/placeholder.jpg" alt="" srcset="" />
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="btn reset-filters disable">Reset Filters</button>
+        <div class="img-btns">
+          <input type="file" class="file-input" accept="image/*" hidden />
+          <button class="btn upload">Choose Image</button>
+          <button class="btn Download disable active">Download Image</button>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
